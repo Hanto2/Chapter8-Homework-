@@ -1,4 +1,5 @@
 import csv
+import pprint
 from collections import Counter
 
 def generate_report():
@@ -17,4 +18,26 @@ def generate_report():
             - 'most_professional_operating_system': A dictionary containing the count of developers based on the most wanted operating system.
             - 'popular_industry': A dictionary containing the count of developers based on the top three industries they work in.
     '''
-    pass
+    def read(num):
+        with open('stackoverflow_survey.csv', 'r') as file:
+            reader = csv.reader(file)
+            next(reader)
+            data = [row[num].split(";") for row in reader]
+            res = [items for row in data for items in row if items != "NA"]
+            value = Counter(res).most_common(3)
+            return dict(value)
+    result = {
+        'dev_activities': read(0),
+        'most_used_language': read(1),
+        'most_wanted_language': read(2),
+        'most_used_framework': read(3),
+        'most_wanted_framework': read(4),
+        'most_used_tool': read(5),
+        'most_wanted_tool': read(6),
+        'most_personal_operating_system': read(7),
+        'most_professional_operating_system': read(8),
+        'popular_industry': read(9)
+    }
+    return result
+
+print(generate_report())
